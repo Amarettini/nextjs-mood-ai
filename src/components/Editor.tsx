@@ -1,14 +1,40 @@
 "use client";
 
-import { Entry } from "@/types";
-import { FunctionComponent } from "react";
+import { updateEntry } from "@/utils/api";
+import { JournalEntry } from "@prisma/client";
+import { FunctionComponent, useState } from "react";
+import { useAutosave } from "react-autosave";
 
 interface Props {
-  entry: Entry;
+  entry: JournalEntry;
 }
 
 const Editor: FunctionComponent<Props> = ({ entry }) => {
-  return <div>{entry.content}</div>;
+  const [value, setValue] = useState(entry.content);
+  const [isLoading, setIsLoading] = useState(false);
+  useAutosave({
+    data: value,
+    onSave: async (_value) => {
+      setIsLoading(true);
+      const updated = await updateEntry(entry.id, _value);
+      setIsLoading(false);
+    },
+  });
+
+  const changeHandler: React.ChangeEventHandler<HTMLTextAreaElement> = (e) => {
+    setValue(e.target.value);
+  };
+
+  return (
+    <div className="w-full h-full">
+      {isLoading && <div>...loading</div>}
+      <textarea
+        className="w-full h-full p-8 text-xl outline-none"
+        value={value}
+        onChange={changeHandler}
+      />
+    </div>
+  );
 };
 
 export default Editor;

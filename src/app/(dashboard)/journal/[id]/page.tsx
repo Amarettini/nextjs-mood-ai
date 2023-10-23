@@ -19,7 +19,7 @@ const getEntry = async (id: string) => {
 const EntryPage: FunctionComponent<Props> = async ({ params }) => {
   const entry = await getEntry(params.id);
   return (
-    <div>
+    <div className="w-full h-full">
       <Editor entry={entry} />
     </div>
   );

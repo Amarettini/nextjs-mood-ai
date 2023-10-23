@@ -38,6 +38,9 @@ dependencies:
   react:
     specifier: 18.2.0
     version: 18.2.0
+  react-autosave:
+    specifier: ^0.4.3
+    version: 0.4.3(react-dom@18.2.0)(react@18.2.0)
   react-dom:
     specifier: 18.2.0
     version: 18.2.0(react@18.2.0)
@@ -2437,6 +2440,16 @@ packages:
   /quick-lru@4.0.1:
     resolution: {integrity: sha512-ARhCpm70fzdcvNQfPoy49IaanKkTlRWF2JMzqhcJbhSFRZv7nPTvZJdcY7301IPmvW+/p0RgIWnQDLJxifsQ7g==}
     engines: {node: '>=8'}
+    dev: false
+
+  /react-autosave@0.4.3(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-uiQAsQYZKfaG9uDQnZMtvM2rIohy0KbhxYYxpFqQiB7RpcsPUDG03QNwmMMcr0TbvSW3rPyHjZdWEUcUeEpRbQ==}
+    peerDependencies:
+      react: ^17.x.x || ^18.x.x
+      react-dom: ^17.x.x || ^18.x.x
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /react-dom@18.2.0(react@18.2.0):
