@@ -33,7 +33,8 @@ model JournalEntry {
 
   analysis Analysis?
 
-  @@index([userId])
+  // Compund constraint to select unique Entry of authenticated user
+  @@unique([userId, id])
 }
 
 model Analysis {
