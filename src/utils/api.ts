@@ -1,4 +1,4 @@
-import { UpdateEntryRequestBody, UpdateEntryResponseBody } from "@/types";
+import { DefaultApiResponse, UpdateEntryRequestBody } from "@/types";
 
 const createUrl = (path: string) => {
   return window.location.origin + path;
@@ -27,7 +27,7 @@ export const updateEntry = async (id: string, content: string) => {
 
   // TODO: improve error handling
   if (res.ok) {
-    const data: UpdateEntryResponseBody = await res.json();
+    const data: DefaultApiResponse = await res.json();
     return data.data;
   }
 };

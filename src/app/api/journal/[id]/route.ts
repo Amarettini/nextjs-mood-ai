@@ -1,4 +1,5 @@
 import { DefaultApiResponse, UpdateEntryRequestBody } from "@/types";
+import { analyze } from "@/utils/ai";
 import { getUserByClerkId } from "@/utils/auth";
 import { prisma } from "@/utils/db";
 import { NextResponse, NextRequest } from "next/server";
@@ -10,7 +11,7 @@ export const PATCH = async (req: NextRequest, { params }: { params: { id: string
   if (!(reqBody instanceof Object && Object.hasOwn(reqBody, "content"))) {
     // throw new Error("False patch request body, body has no `content` key");
     resBody.error = "Failed to parse request body as json. Body has no `content` key";
-    return NextResponse.json(resBody, { status: 500 });
+    return NextResponse.json<DefaultApiResponse>(resBody, { status: 500 });
   }
   const newContent = (reqBody as UpdateEntryRequestBody).content;
 
@@ -28,6 +29,23 @@ export const PATCH = async (req: NextRequest, { params }: { params: { id: string
     },
   });
 
-  resBody.data = updatedEntry;
-  return NextResponse.json(resBody);
+  const analysis = await analyze(updatedEntry.content);
+  if (!analysis) {
+    resBody.error = "Failed to analyze content of JournalEntry";
+    return NextResponse.json<DefaultApiResponse>(resBody, { status: 500 });
+  }
+
+  const updatedAnalysis = await prisma.analysis.upsert({
+    where: {
+      entryId: updatedEntry.id,
+    },
+    create: {
+      entryId: updatedEntry.id,
+      ...analysis,
+    },
+    update: analysis,
+  });
+
+  resBody.data = { ...updatedEntry, analysis: updatedAnalysis };
+  return NextResponse.json<DefaultApiResponse>(resBody);
 };

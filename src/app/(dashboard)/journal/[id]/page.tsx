@@ -12,6 +12,9 @@ const getEntry = async (id: string) => {
   const user = await getUserByClerkId();
   const entry = await prisma.journalEntry.findUniqueOrThrow({
     where: { userId_id: { userId: user.id, id } },
+    include: {
+      analysis: true,
+    },
   });
 
   return entry;
@@ -19,11 +22,17 @@ const getEntry = async (id: string) => {
 
 const EntryPage: FunctionComponent<Props> = async ({ params }) => {
   const entry = await getEntry(params.id);
+
+  if (!entry.analysis) {
+    return <div className="h-full w-full">Failed to load Journal Entry Analysis.</div>;
+  }
+
+  const { summary, subject, mood, isNegative, color } = entry.analysis;
   const analysisData = [
-    { name: "Summary", value: "Good" },
-    { name: "Subject", value: "First Entry" },
-    { name: "Mood", value: "Happy" },
-    { name: "Negative", value: "False" },
+    { name: "Summary", value: summary },
+    { name: "Subject", value: subject },
+    { name: "Mood", value: mood },
+    { name: "Negative", value: isNegative ? "True" : "False" },
   ];
 
   return (
@@ -32,7 +41,7 @@ const EntryPage: FunctionComponent<Props> = async ({ params }) => {
         <Editor entry={entry} />
       </div>
       <div className="border-l border-black/10">
-        <div className="bg-blue-300 px-6 py-10">
+        <div className="px-6 py-10" style={{ backgroundColor: color }}>
           <h2 className="text-2xl">Analysis</h2>
         </div>
         <div>
