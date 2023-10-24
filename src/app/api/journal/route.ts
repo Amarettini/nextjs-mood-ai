@@ -30,7 +30,7 @@ export const POST = async () => {
     }
   })
 
-  revalidatePath("/journal");
+  //revalidatePath("/journal");
 
   return NextResponse.json({ data: entry });
 };

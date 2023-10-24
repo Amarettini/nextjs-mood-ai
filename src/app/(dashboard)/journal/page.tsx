@@ -13,9 +13,6 @@ const getEntries = async () => {
     orderBy: {
       createdAt: "desc",
     },
-    include: {
-      analysis: true,
-    },
   });
 
   return entries;

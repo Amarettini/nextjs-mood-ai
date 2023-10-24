@@ -35,7 +35,7 @@ export const PATCH = async (req: NextRequest, { params }: { params: { id: string
     return NextResponse.json<DefaultApiResponse>(resBody, { status: 500 });
   }
 
-  const updatedAnalysis = await prisma.analysis.upsert({
+  const updated = await prisma.analysis.upsert({
     where: {
       entryId: updatedEntry.id,
     },
@@ -46,6 +46,6 @@ export const PATCH = async (req: NextRequest, { params }: { params: { id: string
     update: analysis,
   });
 
-  resBody.data = { ...updatedEntry, analysis: updatedAnalysis };
+  resBody.data = { ...updatedEntry, analysis: updated };
   return NextResponse.json<DefaultApiResponse>(resBody);
 };
