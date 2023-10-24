@@ -9,6 +9,7 @@ interface Props {
   entry: JournalEntry;
 }
 
+// TODO: fix useAutosave executing twice on initial page load, should only run when user changes text
 const Editor: FunctionComponent<Props> = ({ entry }) => {
   const [value, setValue] = useState(entry.content);
   const [isLoading, setIsLoading] = useState(false);
@@ -17,6 +18,7 @@ const Editor: FunctionComponent<Props> = ({ entry }) => {
     onSave: async (_value) => {
       setIsLoading(true);
       const updated = await updateEntry(entry.id, _value);
+      console.log("Saveing...");
       setIsLoading(false);
     },
   });
