@@ -40,6 +40,7 @@ export const PATCH = async (req: NextRequest, { params }: { params: { id: string
       entryId: updatedEntry.id,
     },
     create: {
+      userId: userId,
       entryId: updatedEntry.id,
       ...analysis,
     },

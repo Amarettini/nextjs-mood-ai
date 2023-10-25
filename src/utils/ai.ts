@@ -17,9 +17,15 @@ const parser = StructuredOutputParser.fromZodSchema(
       .boolean()
       .describe("is the journal entry negative? (i.e. does it contain negative emotions?)."),
     color: z.string().describe(
-      `a hexidecimal color code that represents the mood of the entry. Example #0101fe for blue\ 
+      `a hexidecimal color code that represents the mood of the entry. Example #0101fe for blue \
 representing happiness.`
     ),
+    sentimentScore: z
+      .number()
+      .describe(
+        `sentiment of the text and rated on a scale from -10 to 10, where -10 is extremely \
+negative, 0 is neutral, and 10 is extremely positive.`
+      ),
   })
 );
 
@@ -59,7 +65,10 @@ export const analyze = async (content: string) => {
   }
 };
 
-export const qa = async (question: string, entries: { id: string, content: string, createdAt: Date }[]) => {
+export const qa = async (
+  question: string,
+  entries: { id: string; content: string; createdAt: Date }[]
+) => {
   const docs = entries.map((entry) => {
     return new Document({
       pageContent: entry.content,
@@ -77,8 +86,8 @@ export const qa = async (question: string, entries: { id: string, content: strin
   const relevantDocs = await store.similaritySearch(question);
   const res = await chain.call({
     input_documents: relevantDocs,
-    question
-  })
+    question,
+  });
 
-  return res.output_text
+  return res.output_text;
 };
